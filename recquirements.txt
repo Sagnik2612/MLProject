@@ -3,4 +3,7 @@ pandas
 scikit-learn
 tensorflow
 matplotlib
+pymysql
+mysql-connector-python
+python-dotenv
 -e .
