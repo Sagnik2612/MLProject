@@ -4,6 +4,7 @@ scikit-learn
 tensorflow
 matplotlib
 pymysql
+seaborn
 mysql-connector-python
 python-dotenv
 -e .

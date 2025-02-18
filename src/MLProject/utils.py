@@ -15,6 +15,8 @@ import pandas as pd
 from dataclasses import dataclass 
 from dotenv import load_dotenv
 import pymysql
+import pickle
+import numpy as np
 
 load_dotenv() #This will load all my environment variables
 #(sql db info here)
@@ -83,10 +85,34 @@ def read_sql_data():
         print(df.head())
 
         return df
+    
+    
 
 
     except Exception as e:
         raise CustomException(e,sys)
+    
+
+
+#The Preprocessing objet has to be saved in a pickle file
+#As it is a common functionality, we write its code in utils.py
+
+
+def save_obj(file_path,obj):
+    try:
+        #First make the directory to save the preprocessor pickle file
+        dir_path=os.path.dirname(file_path)
+        os.makedirs(dir_path,exist_ok=True)
+
+        with open(file_path,"wb") as f:
+            pickle.dump(obj,f)
+            # Dumped the functionality as an object in the pickle file
+
+
+    except Exception as e:
+        raise CustomException(e,sys)
+
+
 
 
 
