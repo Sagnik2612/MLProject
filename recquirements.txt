@@ -5,6 +5,10 @@ tensorflow
 matplotlib
 pymysql
 seaborn
+dill
+xgboost
+catboost
+mlflow==2.2.2
 mysql-connector-python
 python-dotenv
 -e .

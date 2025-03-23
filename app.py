@@ -6,6 +6,7 @@ from src.MLProject.components.data_ingestion import DataIngestion
 from src.MLProject.components.data_ingestion import DataIngestionConfig
 from src.MLProject.components.data_transformation import DataTransformationConfig
 from src.MLProject.components.data_transformation import DataTransformation
+from src.MLProject.components.data_model_trainer import ModTrainConfig,ModelTrainer
 import sys
 
 #Execution point of the file with if statement
@@ -27,7 +28,12 @@ if __name__=="__main__":
 
         #dat_trans_config=DataTransformationConfig() #initialized
         dat_trans=DataTransformation() #initialized
-        dat_trans.initiate_dat_trans(train_data_path,test_data_path) 
+        train_arr,test_arr,_=dat_trans.initiate_dat_trans(train_data_path,test_data_path) 
+
+        # model trainer
+        model_trainer=ModelTrainer()
+        print(model_trainer.initiate_mod_train(train_arr,test_arr)) #returns the r2 score of best fit model
+
 
 
     except Exception as e:

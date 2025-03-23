@@ -14,9 +14,16 @@ from src.MLProject.logger import logging
 import pandas as pd
 from dataclasses import dataclass 
 from dotenv import load_dotenv
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import r2_score
 import pymysql
 import pickle
 import numpy as np
+import logging
+from sklearn.pipeline import Pipeline
+from copy import deepcopy
+from sklearn.exceptions import NotFittedError
+from sklearn.utils.validation import check_is_fitted
 
 load_dotenv() #This will load all my environment variables
 #(sql db info here)
@@ -109,8 +116,78 @@ def save_obj(file_path,obj):
             # Dumped the functionality as an object in the pickle file
 
 
+
     except Exception as e:
         raise CustomException(e,sys)
+    
+
+def train_and_evaluate_models(models, params, X_train, y_train, X_test, y_test):
+
+    #Takes in all the pre-processed, train-test-split data and all the ML models and hyperparams
+    #Returns the best model,model score
+    
+    report = {}  # Dictionary to store R² scores
+    
+       
+    for model_name, model in models.items():
+
+        try:
+            logging.info(f"🚀 Training model: {model_name}")
+
+            # Ensure the model is an instance, not a class reference
+            if isinstance(model, type):
+                model = model()  # Instantiate if it's a class
+
+            # Get hyperparameters for the model
+            param_grid = params.get(model_name, {})
+
+             # Apply GridSearchCV if parameters exist
+            if param_grid:
+                gs = GridSearchCV(model, param_grid, cv=3, scoring="r2", n_jobs=-1, verbose=1)
+                gs.fit(X_train, y_train)
+                best_model = gs.best_estimator_
+                logging.info(f"✅ Best parameters for {model_name}: {gs.best_params_}")
+            else:
+                best_model = model  # Use original model if no hyperparameters
+            # ✅ FIXED: Use `gs.best_estimator_` instead of creating a new instance
+            
+            best_model.fit(X_train,y_train)
+
+            logging.info(f"✅ Best parameters for {model_name}: {gs.best_params_}")
+
+            # ✅ Debugging: Check if the model is fitted
+            try:
+                check_is_fitted(best_model)
+                logging.info(f"✅ {model_name} is successfully fitted!")
+            except NotFittedError:
+                logging.error(f"❌ {model_name} is NOT fitted after GridSearchCV!")
+
+            # Make predictions
+            y_test_pred = best_model.predict(X_test)
+
+
+            # Calculate R² score
+            r2 = r2_score(y_test, y_test_pred)
+               
+            logging.info(f"R² Score for {model_name}: {r2}")
+
+            # Store in the report dictionary
+            report[model_name] = r2
+            print(f"✅ {model_name} R² Score: {report[model_name]}")
+
+        
+        except Exception as e:
+
+             logging.error(f"Exception occurred in {model_name}: {e}")
+             raise CustomException(f"Failed in {model_name}", sys) from e  # Wrap original error
+
+    # Return the dictionary with model names and their corresponding R² scores
+    return report 
+    """
+    except Exception as e:
+        raise CustomException(e,sys)"
+    """
+
 
 
 
