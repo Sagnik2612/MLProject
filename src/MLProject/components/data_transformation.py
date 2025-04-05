@@ -43,12 +43,12 @@ class DataTransformation:
     def data_transf_obj(self):
         #It's functionality is to perform feature engin.
         try:
-            num_col=["reading score","writing score"] #numerical columns
+            num_col=["reading_score","writing_score"] #numerical columns
             cat_col=["gender",
-                     "race/ethnicity",
-                     "parental level of education",
+                     "race_ethnicity",
+                     "parental_level_of_education",
                      "lunch",
-                     "test preparation course"
+                     "test_preparation_course"
                      ]
             #StandardScaler will be applied to Numerical Features
             #OneHotEncoder will be applied to Categorical Variables
@@ -132,8 +132,8 @@ class DataTransformation:
 
             prep_obj=self.data_transf_obj()
 
-            target_col="math score"
-            num_col=["reading score","writing score"]
+            target_col="math_score"
+            num_col=["reading_score","writing_score"]
 
             #Dividing train dataset into independent and dependent features
 

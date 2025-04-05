@@ -1,0 +1,167 @@
+<html>
+<body>
+<!-- This defines a basic HTML document. -->
+ <!-- The <html> tag represents the entire page, and <body> contains everything visible on the webpage. -->
+    <div class="login">
+        <!-- This div (short for "division") is a container used to apply styles (like centering content). -->
+         <!-- The class="login" is meant for CSS styling (though the CSS is not shown here). -->
+         <h1>Student Exam Performance Indicator</h1>
+         <!-- This big bold text is the title of the page. -->
+          <!-- This big bold text is the title of the page. -->
+
+         <form action="{{ url_for('predict_datapoint')}}" method="post">
+            <!--<form> is used to collect user input.  -->
+            <!-- action="{{ url_for('predict_datapoint')}}" tells the form where to send the data after submission. -->
+            <!-- method="post" ensures the data is securely sent to the backend. -->
+            <!-- url_for('predict_datapoint') dynamically generates the Flask route (/predictdata). -->
+            <!-- This means when the user submits the form, -->
+            <!-- it will send the data to Flask’s predict_datapoint function -->
+             <h1>
+                <legend>Student Exam Performance Prediction</legend>
+             </h1>
+             <!-- Another <h1> for better readability. -->
+             <!-- <legend> is typically used inside <fieldset>, but here it's just a title for the form. -->
+
+            
+             <!-- For Gender -->
+            <div class="mb3">
+                <!-- <label> → Adds a label for better accessibility. -->
+                <!-- <select> → Creates a dropdown menu. -->
+                <!-- <option> → Each choice inside the dropdown. -->
+                <!-- required → Ensures the user must select a value before submitting. -->
+                 <label class="form-label">Gender</label>
+                 <select class="form-control" name="gender" required>
+                    <option class="placeholder" selected disabled value="">Select your gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+
+                 </select>
+            </div>
+
+            <!-- For Ethnicity -->
+
+            <div class="mb-3">
+                <label class="form-label">Race or Ethnicity</label>
+                <select class="form-control" name="ethnicity" required>
+                    <option class="placeholder" selected disabled value="">Select Ethnicity</option>
+                    <option value="group A">Group A</option>
+                    <option value="group B">Group B</option>
+                    <option value="group C">Group C</option>
+                    <option value="group D">Group D</option>
+                    <option value="group E">Group E</option>
+                </select>
+            </div>
+
+            <!-- For Parental Level of Education -->
+
+            <div class="mb-3">
+                <label class="form-label">Parental Level of Education</label>
+                <select class="form-control" name="parental_level_of_education" required>
+                    <option class="placeholder" selected disabled value="">Select Parent's Education Level</option>
+                    <option value="associate's degree">Associate's Degree</option>
+                    <option value="bachelor's degree">Bachelor's Degree</option>
+                    <option value="high school">High school</option>
+                    <option value="master's degree">Master's degree</option>
+                    <option value="some college">Some college</option>
+                    <option value="some high school">Some high school</option>
+                </select>
+            </div>
+
+
+
+            <!-- For Lunch type selection -->
+
+
+
+            <div class="mb-3">
+                <label class="form-label">Lunch Type</label>
+                <select class="form-control" name="lunch" required>
+                    <option class="placeholder" selected disabled value="">Select Lunch Type</option>
+                    <option value="free/reduced">Free/Reduced</option>
+                    <option value="standard">Standard</option>
+                </select>
+            </div>
+
+
+            <!-- For Test Preparation Course selection -->
+
+
+            <div class="mb-3">
+                <label class="form-label">Test preparation Course</label>
+                <select class="form-control" name="test_preparation_course" required>
+                    <option class="placeholder" selected disabled value="">Select Test Course</option>
+                    <option value="none">None</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+
+
+            <!-- For Writing Score selection -->
+
+
+            <div class="mb-3">
+                <label class="form-label">Writing Score out of 100</label>
+                <input class="="form-control" type="number" name="writing score" placeholder="=Enter your Writing Score" min="0" max="100" />
+            </div>
+
+            <!-- <input type="number"> → Allows only numerical values. -->
+            <!-- min='0' max='100' → Ensures the score must be between 0 and 100. -->
+
+
+            <!-- For Reading Score selection -->
+
+
+            <div class="mb-3">
+                <label class="form-label">Reading Score out of 100</label>
+                <input class="form-control" type="number" name="reading_score" placeholder="Enter your Reading Score" min='0' max='100' />
+            </div>
+
+            <!-- Submit Button -->
+            
+
+            <div class="mb-3">
+                <input class="btn btn-primary" type="submit" value="Predict your Maths Score" required />
+            </div>
+
+            <!-- This is a submit button styled using CSS classes. -->
+
+            <!-- class="..." → Assigns CSS classes to the element for styling. -->
+            <!-- btn → A Bootstrap class that styles the element as a button. -->
+            <!-- btn-primary → A Bootstrap class that makes the button blue (primary color in Bootstrap). -->
+            <!-- Bootstrap is a CSS framework that makes styling easier and responsive.It provides predefined classes like btn and btn-primary so you don’t have to write custom CSS. -->
+            <!-- With Bootstrap (class="btn btn-primary" added)- A styled blue button with padding, rounded corners, and hover effects. -->
+            <!-- Looks like this:🔵 Predict your Maths Score (Styled button with Bootstrap) -->
+
+
+
+            <!-- Displaying the Prediction Result -->
+
+            <h2>
+                THE prediction is {{results}}
+             </h2>
+
+            <!-- Flask Placeholder {{ results }} → This will be replaced with the actual prediction from the ML model.-->
+
+
+        </body>
+    </html>
+        
+
+            
+             
+
+
+
+
+
+
+            
+            
+
+
+
+
+
+            
+
+

@@ -189,6 +189,23 @@ def train_and_evaluate_models(models, params, X_train, y_train, X_test, y_test):
     """
 
 
+#This load_obj() function is used to load a saved object (like a trained ML model or preprocessor) 
+# from a file using pickle.
+
+def load_obj(file_path):
+    #Takes file_path as an input, which is the location of the saved object (e.g., "artifacts/model.pkl").
+    #Example call-model = load_object("artifacts/model.pkl")
+    #Here, "artifacts/model.pkl" is a saved ML model file.
+
+    try:
+        with open(file_path,"rb") as file_obj:
+            #Opening the File in Read-Binary (rb) Mode
+            #pickle.load(file_obj) reads the binary file and converts it back into a Python object.
+            #The function returns the loaded object (e.g., a trained ML model).
+            return pickle.load(file_obj)
+    except Exception as e:
+        raise CustomException(e,sys)
+
 
 
 

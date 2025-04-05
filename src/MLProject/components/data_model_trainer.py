@@ -18,11 +18,17 @@ from sklearn.neighbors import KNeighborsRegressor
 
 #Performance metrics
 from sklearn.metrics import r2_score
+from sklearn.metrics import mean_squared_error,mean_absolute_error
 
 from src.MLProject.exception import CustomException
 from src.MLProject.logger import logging
 from src.MLProject.utils import train_and_evaluate_models
 from src.MLProject.utils import save_obj
+
+import numpy as np
+import mlflow
+import mlflow.sklearn
+from urllib.parse import urlparse
 
 #Goal-Similar to DataTransformer/DataIngestion
 #where we make the Config class to form the directory to store the pikle file 
@@ -39,6 +45,13 @@ class ModTrainConfig:
 class ModelTrainer:
     def __init__(self):
         self.model_trainer_config=ModTrainConfig()
+
+    def eval_metrics(self,actual, pred):
+        rmse = np.sqrt(mean_squared_error(actual, pred))
+        mae = mean_absolute_error(actual, pred)
+        r2 = r2_score(actual, pred)
+        return rmse, mae, r2
+
 
     def initiate_mod_train(self,train_array,test_array):
         # 1.will input the train+test array
@@ -135,6 +148,84 @@ class ModelTrainer:
             print(report)
     
             print(f"\n🏆 Best Model: {best_model_name} with R² Score: {best_model_score}")
+
+            model_names=list(params.keys())
+            actual_model=""
+
+            for model in model_names:
+                if best_model_name==model:
+                    actual_model=actual_model+model
+
+            best_params=params[actual_model] #parameters of actual model
+
+            """
+
+            #Now we use mlflow pipeline to track every experiment(every running of the entire project with logs and hyperparams)
+            # This code is using MLflow to track and log machine learning experiments, 
+            # and it is integrated with DagsHub for model tracking.
+
+
+            mlflow.set_registry_uri("https://dagshub.com/sagnikbhatt26/my-first-repo.mlflow")
+            #This line tells MLflow to use DagsHub as the registry for storing and managing models.
+            #DagsHub is like GitHub for machine learning, where you can store models, datasets, and experiments.
+
+            tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
+            #mlflow.get_tracking_uri() returns the tracking URL MLflow is using.
+            #urlparse(...).scheme extracts the type of storage (e.g., http, https, or file).
+            #This is useful later when deciding how to save the model.
+
+
+
+            # mlflow
+
+            #This starts an MLflow run, which is like pressing "record" to track the training process.
+            #Everything logged inside this "with" block will be stored in MLflow.
+            with mlflow.start_run():
+
+                predicted_qualities = best_model.predict(X_test)
+                #The best_model is used to make predictions on X_test.
+                #The results are stored in predicted_qualities.
+
+                (rmse, mae, r2) = self.eval_metrics(y_test, predicted_qualities)
+                #This calls a function eval_metrics() (defined elsewhere) to calculate:
+                #RMSE (Root Mean Square Error) → Measures how far predictions are from actual values.
+                #MAE (Mean Absolute Error) → Measures the average error in predictions.
+                #R² (R-squared score) → Measures how well the model explains the data.
+
+                mlflow.log_params(best_params)
+                #Logs the hyperparameters of best_model in MLflow.
+                #Helps track which parameters were used to train this model.
+
+                mlflow.log_metric("rmse", rmse)
+                mlflow.log_metric("r2", r2)
+                mlflow.log_metric("mae", mae)
+                #These lines save the evaluation metrics in MLflow.
+                #This helps compare different models later.
+
+
+                # Model registry does not work with file store
+                if tracking_url_type_store != "file":
+                    #If the tracking URI is not a local file, then we register the model online.
+
+                    # Register the model
+                    # There are other ways to use the Model Registry, which depends on the use case,
+                    # please refer to the doc for more information:
+                    # https://mlflow.org/docs/latest/model-registry.html#api-workflow
+                    mlflow.sklearn.log_model(best_model, "model", registered_model_name=actual_model)
+                    #If MLflow is not using a local file system, we register the model with a name (actual_model).
+                    #This allows us to track different versions of the model in MLflow.
+
+
+                else:
+                    mlflow.sklearn.log_model(best_model, "model")
+                    #If MLflow is using a local file system, we just log the model without registering it."
+            """
+
+
+
+
+
+
 
             
 

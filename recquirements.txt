@@ -9,6 +9,7 @@ dill
 xgboost
 catboost
 mlflow==2.2.2
+flask
 mysql-connector-python
 python-dotenv
 -e .
